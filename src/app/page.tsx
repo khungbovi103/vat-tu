@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 
 import { FieldComponent } from '@/component';
 
-import { ESUPPLIES_TYPE, LIST_SUPPLIES_TYPE, validateSchemaSuppliesForm } from '@/constant';
+import { ESUPPLIES_TYPE, LIST_SUPPLIES_TYPE, TEST, validateSchemaSuppliesForm } from '@/constant';
 
 
 interface IFormInput {
@@ -28,8 +28,10 @@ export default function Home() {
         resolver: yupResolver(validateSchemaSuppliesForm)
     });
 
-    const { formState } = formMethods;
+    const { formState, watch } = formMethods;
     // const { isValid } = formState;
+
+    const watchSuppliesType = watch('suppliesType');
 
     const handleConfirmModalRequest: React.FormEventHandler<HTMLFormElement> = async (event) => {
         event.preventDefault();
@@ -104,7 +106,7 @@ export default function Home() {
                                                 isShowMessage={!!fieldState?.error}
                                                 message={fieldState?.error?.message}
                                                 text={'Khối lượng'}>
-                                                <InputNumber style={{ width: '100%' }} {...restField} value={value} addonAfter={'$'}
+                                                <InputNumber style={{ width: '100%' }} {...restField} value={value} addonAfter={TEST[watchSuppliesType]}
                                                              defaultValue={1} />
                                             </FieldComponent>
                                         );
@@ -147,7 +149,7 @@ export default function Home() {
                                                 text={'Giờ yêu cầu'}>
                                                 <TimePicker
                                                     {...restField}
-                                                    value={dayjs(value)}
+                                                    value={value ? dayjs(value) : undefined}
                                                     style={{ width: '100%' }}
                                                     placeholder="Chọn giờ"
                                                 />
