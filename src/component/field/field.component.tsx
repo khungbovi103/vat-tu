@@ -17,7 +17,7 @@ interface FieldComponentProps {
     messageClassName?: string;
     renderErrorMessage?: () => React.ReactNode;
     isResizeWhenShowError?: boolean;
-    iconTooltip?: any;
+    iconTooltip?: React.ReactElement;
 }
 
 export const FieldComponent: React.FC<FieldComponentProps> = (props) => {

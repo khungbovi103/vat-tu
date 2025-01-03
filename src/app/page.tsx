@@ -3,6 +3,7 @@ import React, { useRef } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Input, Row, Col, Select, DatePicker, TimePicker, InputNumber } from 'antd';
+import dayjs from 'dayjs';
 
 import { FieldComponent } from '@/component';
 
@@ -28,7 +29,7 @@ export default function Home() {
     });
 
     const { formState } = formMethods;
-    const { isValid } = formState;
+    // const { isValid } = formState;
 
     const handleConfirmModalRequest: React.FormEventHandler<HTMLFormElement> = async (event) => {
         event.preventDefault();
@@ -47,7 +48,7 @@ export default function Home() {
                                 <Controller
                                     control={formMethods.control}
                                     name="constructionName"
-                                    render={({ field: { ref, value, ...restField }, fieldState }) => {
+                                    render={({ field: { value, ...restField }, fieldState }) => {
                                         return (
                                             <FieldComponent
                                                 isRequired
@@ -69,7 +70,7 @@ export default function Home() {
                                 <Controller
                                     control={formMethods.control}
                                     name="suppliesType"
-                                    render={({ field: { ref, value, ...restField }, fieldState }) => {
+                                    render={({ field: { value, ...restField }, fieldState }) => {
                                         return (
                                             <FieldComponent
                                                 isRequired
@@ -96,7 +97,7 @@ export default function Home() {
                                 <Controller
                                     control={formMethods.control}
                                     name="volume"
-                                    render={({ field: { ref, value, ...restField }, fieldState }) => {
+                                    render={({ field: { value, ...restField }, fieldState }) => {
                                         return (
                                             <FieldComponent
                                                 isRequired
@@ -114,7 +115,7 @@ export default function Home() {
                                 <Controller
                                     control={formMethods.control}
                                     name="requestDate"
-                                    render={({ field: { ref, value, ...restField }, fieldState }) => {
+                                    render={({ field: { value, ...restField }, fieldState }) => {
                                         return (
                                             <FieldComponent
                                                 isRequired
@@ -137,7 +138,7 @@ export default function Home() {
                                 <Controller
                                     control={formMethods.control}
                                     name="requestTime"
-                                    render={({ field: { ref, value, ...restField }, fieldState }) => {
+                                    render={({ field: { value, ...restField }, fieldState }) => {
                                         return (
                                             <FieldComponent
                                                 isRequired
@@ -146,6 +147,7 @@ export default function Home() {
                                                 text={'Giờ yêu cầu'}>
                                                 <TimePicker
                                                     {...restField}
+                                                    value={dayjs(value)}
                                                     style={{ width: '100%' }}
                                                     placeholder="Chọn giờ"
                                                 />
