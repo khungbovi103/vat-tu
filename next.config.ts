@@ -25,6 +25,9 @@ const nextConfig: NextConfig = {
     },
     optimizeFonts: true,
     compress: true,
+    experimental: {
+        esmExternals: 'loose', // Enables ESM support
+    },
 };
 
 export default nextConfig;
