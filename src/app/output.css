@@ -626,8 +626,8 @@ video {
   align-items: center;
 }
 
-.gap-2 {
-  gap: 0.5rem;
+.justify-end {
+  justify-content: flex-end;
 }
 
 .gap-4 {
@@ -650,6 +650,10 @@ video {
 
 .text-ellipsis {
   text-overflow: ellipsis;
+}
+
+.border {
+  border-width: 1px;
 }
 
 .p-8 {
@@ -675,6 +679,10 @@ video {
 
 .font-normal {
   font-weight: 400;
+}
+
+.italic {
+  font-style: italic;
 }
 
 .tracking-tight {

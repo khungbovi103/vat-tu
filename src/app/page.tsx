@@ -4,16 +4,16 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Col, DatePicker, Input, InputNumber, Row, Select, TimePicker } from 'antd';
 import dayjs from 'dayjs';
+import dynamic from 'next/dynamic';
 
 import { FieldComponent } from '@/component';
-
-import { ESUPPLIES_TYPE, LIST_SUPPLIES_TYPE, TEST, validateSchemaSuppliesForm } from '@/constant';
 import { PdfComponent } from '@/component/pdf';
-import dynamic from 'next/dynamic';
+
+import { DON_VI_LABEL, ESUPPLIES_TYPE, LIST_SUPPLIES_TYPE, validateSchemaSuppliesForm } from '@/constant';
 
 const PDFDownloadLink = dynamic(() =>
         import('@react-pdf/renderer').then((mod) => mod.PDFDownloadLink),
-    { ssr: false } // Prevent server-side rendering
+    { ssr: false }
 );
 
 export interface IFormInput {
@@ -35,10 +35,13 @@ export default function Home() {
     });
 
     const { formState, watch } = formMethods;
-    // const { isValid } = formState;
+    const { isValid } = formState;
 
     const watchSuppliesType = watch('suppliesType');
     const watchConstructionName = watch('constructionName');
+    const watchRequestDate = watch('requestDate');
+    const watchRequestTime = watch('requestTime');
+    const watchVolume = watch('volume');
 
 
     const handleConfirmModalRequest: React.FormEventHandler<HTMLFormElement> = async (event) => {
@@ -90,13 +93,8 @@ export default function Home() {
                                                 <Select
                                                     {...restField}
                                                     value={value}
-                                                    // showSearch
                                                     style={{ width: '100%' }}
                                                     placeholder="Chọn"
-                                                    // optionFilterProp="label"
-                                                    // filterSort={(optionA, optionB) =>
-                                                    //     (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-                                                    // }
                                                     options={LIST_SUPPLIES_TYPE} />
                                             </FieldComponent>
                                         );
@@ -115,8 +113,10 @@ export default function Home() {
                                                 message={fieldState?.error?.message}
                                                 text={'Khối lượng'}>
                                                 <InputNumber style={{ width: '100%' }} {...restField} value={value}
-                                                             addonAfter={TEST[watchSuppliesType]}
-                                                             defaultValue={1} />
+                                                             addonAfter={DON_VI_LABEL[watchSuppliesType]}
+                                                             defaultValue={1}
+                                                             formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                                />
                                             </FieldComponent>
                                         );
                                     }}
@@ -158,10 +158,18 @@ export default function Home() {
                                                 text={'Giờ yêu cầu'}>
                                                 <TimePicker
                                                     {...restField}
-                                                    value={value ? dayjs(value) : undefined}
+                                                    onChange={(time) => {
+                                                        if (time) {
+                                                            // Chuyển đổi giá trị từ dayjs về HHmm
+                                                            restField.onChange(time.format('HHmm'));
+                                                        } else {
+                                                            restField.onChange(undefined);
+                                                        }
+                                                    }}
                                                     style={{ width: '100%' }}
                                                     placeholder="Chọn giờ"
-                                                    format="HHmm"
+                                                    format={'HH:mm'}
+                                                    value={value ? dayjs(value, 'HHmm') : undefined} // Chuyển đổi giá trị từ HHmm sang dayjs
                                                 />
                                             </FieldComponent>
                                         );
@@ -172,13 +180,14 @@ export default function Home() {
                         <Row gutter={24}>
                             <Col span={24}>
                                 <div className="flex justify-end">
-                                    {PDFDownloadLink && (
+                                    {PDFDownloadLink && isValid && (
                                         <PDFDownloadLink
-                                            document={<PdfComponent constructionName={'abc'}
-                                                                    suppliesType={ESUPPLIES_TYPE.BE_TONG}
-                                                                    requestDate={'bcd'} requestTime={'efg'}
-                                                                    volume={5} />}
-                                            fileName="sample.pdf"
+                                            document={<PdfComponent constructionName={watchConstructionName}
+                                                                    suppliesType={watchSuppliesType}
+                                                                    requestDate={dayjs(watchRequestDate)}
+                                                                    requestTime={dayjs(watchRequestTime, 'HHmm')}
+                                                                    volume={watchVolume} />}
+                                            fileName="yeu-cau-vat-tu.pdf"
                                             style={{
                                                 textDecoration: 'none',
                                                 padding: '10px 20px',
@@ -188,9 +197,10 @@ export default function Home() {
                                                 borderRadius: '4px'
                                             }}
                                         >
-                                            {'Submit'}
+                                            {({ loading }: { loading: boolean }) =>
+                                                loading ? 'Đang tạo PDF...' : 'Tải xuống file'
+                                            }
                                         </PDFDownloadLink>)}
-
                                 </div>
                             </Col>
                         </Row>

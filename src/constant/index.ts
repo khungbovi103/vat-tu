@@ -10,6 +10,11 @@ export const LIST_SUPPLIES_TYPE = [
     { label: 'Dầu Diesel', value: ESUPPLIES_TYPE.DAU_DIESEL }
 ];
 
+export const LIST_SUPPLIES_TYPE_LABEL = {
+    [ESUPPLIES_TYPE.BE_TONG]: 'Bê Tông thân trụ T1L',
+    [ESUPPLIES_TYPE.DAU_DIESEL]: 'Dầu Diesel'
+};
+
 export const validateSchemaSuppliesForm = Yup.object().shape({
     constructionName: Yup.string().required('Vui lòng nhập thông tin này'),
     suppliesType: Yup.string().required('Vui lòng chọn thông tin này'),
@@ -18,7 +23,7 @@ export const validateSchemaSuppliesForm = Yup.object().shape({
     volume: Yup.number().required('Vui lòng nhập thông tin này').min(1, 'Giá trị nhập phải lớn hơn 0')
 });
 
-export const TEST = {
+export const DON_VI_LABEL = {
     [ESUPPLIES_TYPE.BE_TONG]: 'm3',
     [ESUPPLIES_TYPE.DAU_DIESEL]: 'Lít'
 };
